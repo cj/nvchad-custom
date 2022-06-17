@@ -5,7 +5,7 @@ local sources = {
    -- webdev stuff
    -- b.formatting.deno_fmt,
 
-   b.formatting.prettier.with { filetypes = { "html", "markdown", "css", "graphql", "caddyfile" } },
+   b.formatting.prettier.with { filetypes = { "html", "markdown", "css", "graphql", "caddyfile", "json" } },
 
    -- Lua
    b.formatting.stylua,
@@ -17,6 +17,10 @@ local sources = {
 
    -- cpp
    b.formatting.clang_format,
+
+   b.diagnostics.eslint_d, -- eslint or eslint_d
+   b.formatting.eslint_d, -- eslint or eslint_d
+   b.code_actions.eslint_d, -- eslint or eslint_d
 }
 
 local M = {}

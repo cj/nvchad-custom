@@ -250,14 +250,6 @@ return {
             lsp = {
                disable_lsp = {
                   "denols",
-                  "solargraph",
-                  "pyright",
-                  "yamlls",
-                  "graphql",
-                  "tsserver",
-                  "jsonls",
-                  "eslint",
-                  "tailwindcss",
                },
                format_on_save = false,
                diagnostic = {

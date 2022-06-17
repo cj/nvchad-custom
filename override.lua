@@ -1,7 +1,7 @@
 local M = {}
 
 M.lspinstaller = {
-   automatic_installation = { exclude = { "solargraph", "tsserver" } },
+   automatic_installation = { exclude = { "solargraph", "tsserver", "eslint", "denols", "ltex" } },
 }
 
 local signs = { Error = "", Warn = "", Hint = "", Info = "" }
