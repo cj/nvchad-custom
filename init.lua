@@ -27,6 +27,8 @@
 --       symlink_open = "",
 --    },
 -- }
+local set = vim.opt -- set options
+set.fillchars = set.fillchars + "diff:╱"
 
 vim.cmd [[
       set cmdheight=2
@@ -43,14 +45,6 @@ vim.cmd [[
 
       let g:Illuminate_ftblacklist = ['NvimTree']
 
-      autocmd BufReadPost * hi matchword cterm=underline gui=none guifg=none guibg=none
-      autocmd BufReadPost * hi LspReferenceRead cterm=none gui=none guifg=none guibg=none
-      autocmd BufReadPost * hi LspReferenceText cterm=none gui=none guifg=none guibg=none
-      autocmd BufReadPost * hi LspReferenceWrite cterm=none gui=none guifg=none guibg=none
-      autocmd BufReadPost * silent! nunmap <leader>fÞ
-      autocmd BufReadPost * silent! nunmap <leader>rÞ
-      autocmd BufReadPost * silent! nunmap <leader>tÞ
-      autocmd BufReadPost * silent! nunmap <leader>rÞ
 
       let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
       if executable(s:clip)
@@ -79,10 +73,26 @@ noremap <silent> j gj
 noremap <silent> 0 g0
 noremap <silent> $ g$
 
+    hi IndentBlanklineContextChar cterm=none gui=none guifg=#e5c07b
 
     augroup illuminate_augroup
       autocmd!
-      autocmd vimenter * hi illuminatedword cterm=underline gui=underline
+      autocmd BufReadPost * hi illuminatedword cterm=underline gui=underline
+      autocmd BufReadPost * hi DiffAdd guibg=#23384c guifg=none 
+      autocmd BufReadPost * hi DiffChange guibg=#232c4c guifg=none 
+      autocmd BufReadPost * hi DiffText guibg=#404475 guifg=none 
+      autocmd BufReadPost * hi DiffDelete guibg=none guifg=#313650
+      autocmd BufReadPost * hi Folded guibg=#292f3b
+      autocmd VimEnter set fillchars+=diff:╱
+      autocmd BufReadPost * hi matchword cterm=underline gui=none guifg=none guibg=none
+      autocmd BufReadPost * hi LspReferenceRead cterm=none gui=none guifg=none guibg=none
+      autocmd BufReadPost * hi LspReferenceText cterm=none gui=none guifg=none guibg=none
+      autocmd BufReadPost * hi LspReferenceWrite cterm=none gui=none guifg=none guibg=none
+      autocmd BufReadPost * silent! nunmap <leader>fÞ
+      autocmd BufReadPost * silent! nunmap <leader>rÞ
+      autocmd BufReadPost * silent! nunmap <leader>tÞ
+      autocmd BufReadPost * silent! nunmap <leader>rÞ
+
     augroup end
 
     map <silent> <enter> :noh<cr>
