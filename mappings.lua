@@ -11,6 +11,7 @@ M.truzen = {
 
 M.general = {
    n = {
+      ["<leader>D"] = { "<cmd> :e!<CR> :TroubleToggle document_diagnostics<CR>", "Diagnostics" },
       ["D"] = { ":lua vim.diagnostic.open_float()<CR>", "Show line diagnostics" },
       ["K"] = { ":lua vim.lsp.buf.hover() <CR>", "Show definition" },
       ["U"] = { "<C-r>", "Undo" },
