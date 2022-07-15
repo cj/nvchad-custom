@@ -26,10 +26,35 @@ local sources = {
 local M = {}
 
 M.setup = function()
-   null_ls.setup {
-      debug = true,
-      sources = sources,
-   }
+   local f = io.open("./deno.json", "r")
+
+   if f ~= nil then
+      io.close(f)
+      null_ls.setup {
+         sources = {
+            b.formatting.prettier.with { filetypes = { "html", "markdown", "css", "graphql", "caddyfile", "json" } },
+
+            -- Lua
+            b.formatting.stylua,
+            b.diagnostics.luacheck.with { extra_args = { "--global vim" } },
+
+            -- Shell
+            b.formatting.shfmt,
+            b.diagnostics.shellcheck.with { diagnostics_format = "#{m} [#{c}]" },
+
+            -- cpp
+            b.formatting.clang_format,
+         },
+      }
+   else
+      null_ls.setup {
+         debug = false,
+         sources = sources,
+         on_attach = function(client, bufnr)
+            require("navigator.lspclient.attach").on_attach(client, bufnr)
+         end,
+      }
+   end
 end
 
 return M

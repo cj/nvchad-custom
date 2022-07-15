@@ -24,7 +24,60 @@ M.setup_lsp = function(attach, capabilities)
       "graphql",
       "sourcery",
       "tsserver",
+      "denols",
+      "svelte",
    }
+
+   local tailwind_settings = {
+      lint = {
+         cssConflict = "warning",
+         invalidApply = "error",
+         invalidConfigPath = "error",
+         invalidScreen = "error",
+         invalidTailwindDirective = "error",
+         invalidVariant = "error",
+         recommendedVariantOrder = "warning",
+      },
+      validate = true,
+      experimental = {
+         classRegex = { "tw\\.\\w+`([^`]*)" },
+      },
+   }
+
+   local f = io.open("./deno.json", "r")
+   if f ~= nil then
+      io.close(f)
+      lspconfig.denols.setup {
+         init_options = {
+            lint = true,
+         },
+         on_attach = function(client, bufnr)
+            attach(client, bufnr)
+
+            client.resolved_capabilities.document_formatting = true
+            client.resolved_capabilities.document_range_formatting = true
+
+            require("navigator.lspclient.attach").on_attach(client, bufnr)
+         end,
+         capabilities = capabilities,
+      }
+
+      lspconfig.tailwindcss.setup {
+         on_attach = function(client, bufnr)
+            attach(client, bufnr)
+
+            client.resolved_capabilities.document_formatting = true
+            client.resolved_capabilities.document_range_formatting = true
+         end,
+
+         capabilities = capabilities,
+
+         settings = {
+            tailwindCSS = tailwind_settings,
+         },
+      }
+      return true
+   end
 
    for _, lsp in ipairs(servers) do
       local server = lspconfig[lsp]
@@ -37,12 +90,33 @@ M.setup_lsp = function(attach, capabilities)
          server.falsepostivies_file = ltex.FalsePositives_file
       end
 
+      local root_dir = nil
+
+      if lsp == "denols" then
+         -- root_dir = util.root_pattern "deno.json"
+         local f = io.open("./package.json", "r")
+         if f ~= nil then
+            io.close(f)
+            return true
+         end
+      end
+
+      if lsp == "eslint" or lsp == "tsserver" then
+         local f = io.open("./deno.json", "r")
+         if f ~= nil then
+            io.close(f)
+            return true
+         end
+      end
+
       server.setup {
          init_options = vim.tbl_deep_extend("force", {
             token = "user_MBPBdLmUO_nvnEkRBeZezXVCM5KND_2O0NWgPxJMLREefJptPKbLosQ0ySM",
          }, require(
             "nvim-lsp-ts-utils"
          ).init_options),
+
+         root_dir = root_dir,
 
          settings = {
             ltex = {
@@ -71,28 +145,20 @@ M.setup_lsp = function(attach, capabilities)
                commandPath = "/home/cj/.asdf/shims/solargraph",
                root_dir = util.root_pattern("Gemfile", ".git"),
             },
+
             grammarly = {
                root_dir = util.root_pattern("Gemfile", ".git"),
             },
-            tailwindCSS = {
-               lint = {
-                  cssConflict = "warning",
-                  invalidApply = "error",
-                  invalidConfigPath = "error",
-                  invalidScreen = "error",
-                  invalidTailwindDirective = "error",
-                  invalidVariant = "error",
-                  recommendedVariantOrder = "warning",
-               },
-               validate = true,
-               experimental = {
-                  classRegex = { "tw\\.\\w+`([^`]*)" },
-               },
-            },
+
+            tailwindCSS = tailwind_settings,
          },
 
          on_attach = function(client, bufnr)
             attach(client, bufnr)
+
+            vim.diagnostic.config {
+               virtual_text = false,
+            }
 
             client.resolved_capabilities.document_formatting = true
             client.resolved_capabilities.document_range_formatting = true
@@ -101,17 +167,19 @@ M.setup_lsp = function(attach, capabilities)
             --    client.server_capabilities.renameProvider = false
             -- end
 
-            -- require("navigator.lspclient.attach").on_attach(client, bufnr)
+            require("navigator.lspclient.attach").on_attach(client, bufnr)
 
-            if lsp == "eslint" then
+            -- if lsp == "eslint" then
+            --    client.resolved_capabilities.document_formatting = false
+            --    client.resolved_capabilities.document_range_formatting = false
+            -- end
+
+            if lsp == "tsserver" or lsp == "jsonls" then
                client.resolved_capabilities.document_formatting = false
                client.resolved_capabilities.document_range_formatting = false
             end
 
             if lsp == "tsserver" then
-               client.resolved_capabilities.document_formatting = false
-               client.resolved_capabilities.document_range_formatting = false
-
                local ts_utils = require "nvim-lsp-ts-utils"
                --
                -- -- defaults
@@ -137,9 +205,10 @@ M.setup_lsp = function(attach, capabilities)
                   -- filter diagnostics
                   filter_out_diagnostics_by_severity = {},
                   filter_out_diagnostics_by_code = {},
+                  eslint_enable_diagnostics = true,
 
                   -- inlay hints
-                  auto_inlay_hints = true,
+                  auto_inlay_hints = false,
                   inlay_hints_highlight = "Comment",
                   inlay_hints_priority = 200, -- priority of the hint extmarks
                   inlay_hints_throttle = 150, -- throttle the inlay hint request
@@ -159,7 +228,7 @@ M.setup_lsp = function(attach, capabilities)
                   -- update imports on file move
                   update_imports_on_move = true,
                   require_confirmation_on_move = false,
-                  watch_dir = nil,
+                  watch_dir = true,
                }
                --
                -- -- required to fix code action ranges and filter diagnostics

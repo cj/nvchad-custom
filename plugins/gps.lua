@@ -4,7 +4,7 @@ if not present then
   return
 end
 
-local icons = require("ui.icons").lspkind
+local icons = require("nvchad_ui.icons").lspkind
 
 local options = {
   depth = 5,

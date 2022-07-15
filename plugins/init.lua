@@ -206,7 +206,7 @@ return {
    ["JoosepAlviste/nvim-ts-context-commentstring"] = {},
 
    ["AckslD/nvim-neoclip.lua"] = {
-      after = "telescope.nvim",
+      -- after = "telescope.nvim",
       requires = {
          { "tami5/sqlite.lua", module = "sqlite" },
       },
@@ -246,8 +246,6 @@ return {
                },
             },
          }
-
-         require("telescope").load_extension "neoclip"
       end,
    },
 
@@ -414,6 +412,11 @@ return {
             lsp = {
                disable_lsp = {
                   "denols",
+               },
+               tsserver = { -- gopls setting
+                  on_attach = function(client) -- on_attach for gopls
+                     client.resolved_capabilities.document_formatting = false
+                  end,
                },
                format_on_save = false,
                diagnostic = {

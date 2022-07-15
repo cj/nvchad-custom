@@ -19,6 +19,13 @@ M.plugins = {
       ["nvim-treesitter/nvim-treesitter"] = override.treesitter,
       ["williamboman/nvim-lsp-installer"] = override.lspinstaller,
       ["lukas-reineke/indent-blankline.nvim"] = override.indent,
+      ["NvChad/ui"] = {
+         statusline = {
+            overriden_modules = function()
+               return require "custom.plugins.statusline"
+            end,
+         },
+      },
    },
 
    user = userPlugins,
@@ -42,13 +49,24 @@ M.options = {
 M.mappings = require "custom.mappings"
 
 M.ui = {
+   -- statusline = {
+   --  override = require "custom.plugins.statusline",
+   -- },
+
    hl_override = {
       --override default highlights
-      IndentBlanklineContextChar = { fg = "#e5c07b" },
-      IndentBlanklineContextStart = { bg = "#272c36" },
+      IndentBlanklineContextChar = { fg = "#e5c07b", bg = "NONE" },
+      IndentBlanklineContextStart = { fg = "NONE", bg = "#272c36" },
+      -- DiffAdd = { bg = "#23384c", fg = "" },
+      DiffAdd = { bg = "#2F4446", fg = "NONE" },
+      DiffChange = { bg = "#232c4c", fg = "NONE" },
+      DiffText = { bg = "#404475", fg = "NONE" },
+      -- DiffDelete = { bg = "", fg = "#313650" },
+      DiffDelete = { bg = "#341c28", fg = "#313650" },
    },
 
    hl_add = {
+      DiffText = { bg = "#404475", fg = "NONE" },
       -- Gps item kinds
       GpsItemAbbr = { fg = "#abb2bf", bg = "#22262e", bold = true },
       GpsItemAbbrMatch = { fg = "#61afef", bold = true, bg = "#22262e" },

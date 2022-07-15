@@ -78,10 +78,6 @@ noremap <silent> $ g$
     augroup illuminate_augroup
       autocmd!
       autocmd BufReadPost * hi illuminatedword cterm=underline gui=underline
-      autocmd BufReadPost * hi DiffAdd guibg=#23384c guifg=none 
-      autocmd BufReadPost * hi DiffChange guibg=#232c4c guifg=none 
-      autocmd BufReadPost * hi DiffText guibg=#404475 guifg=none 
-      autocmd BufReadPost * hi DiffDelete guibg=none guifg=#313650
       autocmd BufReadPost * hi Folded guibg=#292f3b
       autocmd VimEnter set fillchars+=diff:╱
       autocmd BufReadPost * hi matchword cterm=underline gui=none guifg=none guibg=none
