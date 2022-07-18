@@ -441,9 +441,7 @@ return {
          }
 
          vim.cmd [[
-           " hi default GHTextViewDark guifg=#e0d8f4 guibg=#332e55
-           " hi default GHListDark guifg=#e0d8f4 guibg=#103234
-           " hi default GHListHl guibg=#404254
+           hi default GHListHl guibg=#3e4451
          ]]
       end,
    },
