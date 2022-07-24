@@ -31,6 +31,7 @@ M.setup = function()
    if f ~= nil then
       io.close(f)
       null_ls.setup {
+         debug = false,
          sources = {
             b.formatting.prettier.with { filetypes = { "html", "markdown", "css", "graphql", "caddyfile", "json" } },
 

@@ -30,11 +30,24 @@
 local set = vim.opt -- set options
 set.fillchars = set.fillchars + "diff:╱"
 
+vim.o.completeopt = "menu,menuone,noselect"
+
+vim.g.mapleader = ";"
+
+vim.lsp.set_log_level('error')
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function()
+    -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+    vim.lsp.buf.formatting_seq_sync(nil, 10000)
+  end,
+})
+
 vim.cmd [[
       set cmdheight=2
       set shortmess=AsIF
 
-      imap <silent><script><expr> <C-e> copilot#Accept("\<CR>")
+      " imap <silent><script><expr> <C-e> copilot#Accept("\<CR>")
       let g:copilot_no_tab_map = v:true
       let g:copilot_assume_mapped = v:true
       let g:copilot_filetypes = {
